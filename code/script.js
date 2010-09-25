@@ -67,7 +67,7 @@ window.addEventListener("load", function(){
 		});
 	});
 	
-	document.body.addEventListener("click", function(e){
+	var handler = function(e){
 		if(e.target.webkitMatchesSelector("a")){
 			var url = e.target.href;
 		}
@@ -103,7 +103,36 @@ window.addEventListener("load", function(){
 				}
 			});
 		});
-	}, false);
+	};
+	
+	document.body.addEventListener("click", handler, false);
+	
+	(function(){
+		var target = undefined;
+		
+		window.addEventListener("mousedown", function(e){
+			if(e.which === 2){
+				target = e.target;
+			}
+		}, false);
+		
+		window.addEventListener("mouseup", function(e){
+			if(e.which === 2){
+				if(e.target === target){
+					var dummy = {
+						which : e.which,
+						shiftKey : e.shiftKey,
+						ctrlKey : e.ctrlKey,
+						target : e.target,
+						preventDefault : function(){ null; }
+					};
+					document.body.removeEventListener("click", handler, false);
+					handler(dummy);
+				}
+				target = null;
+			}
+		}, false);
+	})();
 }, false);
 
 function hoge(url, title){
