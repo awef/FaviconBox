@@ -45,25 +45,20 @@ img {
 		</style>
 		<script>
 window.addEventListener("load", function(){
-	var left = document.createElement("div");
-	left.id = "left";
-	document.body.appendChild(left);
-	
-	var right = document.createElement("div");
-	right.id = "right";
-	document.body.appendChild(right);
-	
-	(function(){
-		right.appendChild(hoge("chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html", "Bookmarks"));
-		right.appendChild(hoge("chrome://history/", "History"));
-		right.appendChild(hoge("chrome://downloads/", "Downloads"));
-		right.appendChild(hoge("chrome://extensions/", "Extensions"));
-	})();
+	var left = document.getElementById("left");
 	
 	chrome.bookmarks.getTree(function(tree){
 		tree[0].children[0].children.forEach(function(val){
 			if("url" in val){
-				left.appendChild(hoge(val.url, val.title));
+				var a = document.createElement("a");
+				a.href = val.url;
+				a.title = val.title;
+				
+				var img = document.createElement("img");
+				img.src = "chrome://favicon/" + val.url;
+				a.appendChild(img);
+				
+				left.appendChild(a);
 			}
 		});
 	});
@@ -147,5 +142,21 @@ function hoge(url, title){
 }
 		</script>
 	</head>
-	<body></body>
+	<body>
+		<div id="left"></div>
+		<div id="right">
+			<a href="chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html" title="Bookmarks">
+				<img src="chrome://favicon/chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html">
+			</a>
+			<a href="chrome://history/" title="History">
+				<img src="chrome://favicon/chrome://history/">
+			</a>
+			<a href="chrome://downloads/" title="Downloads">
+				<img src="chrome://favicon/chrome://downloads/">
+			</a>
+			<a href="chrome://extensions/" title="Extensions">
+				<img src="chrome://favicon/chrome://extensions/">
+			</a>
+		</div>
+	</body>
 </html>
