@@ -1,152 +1,152 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title></title>
-		<style>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
 html, body {
-	padding: 0;
-	margin: 0;
-	overflow: hidden;
-	-webkit-user-select: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  -webkit-user-select: none;
 }
 body {
-	width : 200px;
-	padding: 3px;
-	display : -webkit-box;
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eee));
+  width : 200px;
+  padding: 3px;
+  display : -webkit-box;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eee));
 }
 #left {
-	-webkit-box-flex: 1;
-	overflow: hidden;
-	margin-right: 3px;
+  -webkit-box-flex: 1;
+  overflow: hidden;
+  margin-right: 3px;
 }
 #right {
-	overflow: hidden;
-	width: 32px;
+  overflow: hidden;
+  width: 32px;
 }
 a {
-	display: block;
-	float: left;
-	padding: 4px;
-	margin: 4px;
-	border-radius: 3px;
-	-webkit-box-shadow: 1px 1px 5px #666;
-	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eee));
+  display: block;
+  float: left;
+  padding: 4px;
+  margin: 4px;
+  border-radius: 3px;
+  -webkit-box-shadow: 1px 1px 5px #666;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eee));
 }
 a:hover {
-	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ddd));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ddd));
 }
 img {
-	width: 16px;
-	height: 16px;
-	display: block;
+  width: 16px;
+  height: 16px;
+  display: block;
 }
-		</style>
-		<script>
-window.addEventListener("load", function(){
-	var left = document.getElementById("left");
-	
-	chrome.bookmarks.getTree(function(tree){
-		tree[0].children[0].children.forEach(function(val){
-			if("url" in val){
-				var a = document.createElement("a");
-				a.href = val.url;
-				a.title = val.title;
-				
-				var img = document.createElement("img");
-				img.src = "chrome://favicon/" + val.url;
-				a.appendChild(img);
-				
-				left.appendChild(a);
-			}
-		});
-	});
-	
-	var handler = function(e){
-		if(e.target.webkitMatchesSelector("a")){
-			var url = e.target.href;
-		}
-		else if(e.target.webkitMatchesSelector("a > img")){
-			var url = e.target.parentNode.href;
-		}
-		else{
-			return;
-		}
-		e.preventDefault();
-		
-		var cb = function(){
-			close();
-		};
-		chrome.windows.getCurrent(function(window){
-			chrome.tabs.getSelected(window.id, function(tab){
-				if(e.which === 1 && !e.shiftKey && !e.ctrlKey){
-					chrome.tabs.update(tab.id, {url : url}, cb);
-				}
-				else if(
-					(e.which === 1 && e.ctrlKey) ||
-					(e.which === 2)
-				){
-					chrome.tabs.create({
-						url : url,
-						index : tab.index + 1,
-						//selected : e.shiftKey
-						selected : true
-					}, cb);
-				}
-				else if(e.which === 1 && e.shiftKey && !e.ctrlKey){
-					chrome.windows.create({url : url}, cb);
-				}
-			});
-		});
-	};
-	
-	document.documentElement.addEventListener("click", handler, false);
-	
-	(function(){
-		var target = undefined;
-		
-		document.documentElement.addEventListener("mousedown", function(e){
-			if(e.which === 2){
-				target = e.target;
-			}
-		}, false);
-		
-		document.documentElement.addEventListener("mouseup", function(e){
-			if(e.which === 2){
-				if(e.target === target){
-					var dummy = {
-						which : e.which,
-						shiftKey : e.shiftKey,
-						ctrlKey : e.ctrlKey,
-						target : e.target,
-						preventDefault : function(){ null; }
-					};
-					document.documentElement.removeEventListener("click", handler, false);
-					handler(dummy);
-				}
-				target = null;
-			}
-		}, false);
-	})();
+    </style>
+    <script>
+window.addEventListener('load', function() {
+  var left = document.getElementById('left');
+
+  chrome.bookmarks.getTree(function(tree) {
+    tree[0].children[0].children.forEach(function(val) {
+      if ('url' in val) {
+        var a = document.createElement('a');
+        a.href = val.url;
+        a.title = val.title;
+
+        var img = document.createElement('img');
+        img.src = 'chrome://favicon/' + val.url;
+        a.appendChild(img);
+
+        left.appendChild(a);
+      }
+    });
+  });
+
+  var handler = function(e) {
+    if (e.target.webkitMatchesSelector('a')) {
+      var url = e.target.href;
+    }
+    else if (e.target.webkitMatchesSelector('a > img')) {
+      var url = e.target.parentNode.href;
+    }
+    else {
+      return;
+    }
+    e.preventDefault();
+
+    var cb = function() {
+      close();
+    };
+    chrome.windows.getCurrent(function(window) {
+      chrome.tabs.getSelected(window.id, function(tab) {
+        if (e.which === 1 && !e.shiftKey && !e.ctrlKey) {
+          chrome.tabs.update(tab.id, {url: url}, cb);
+        }
+        else if (
+            (e.which === 1 && e.ctrlKey) ||
+            (e.which === 2)
+        ) {
+          chrome.tabs.create({
+            url: url,
+            index: tab.index + 1,
+            //selected : e.shiftKey
+            selected: true
+          }, cb);
+        }
+        else if (e.which === 1 && e.shiftKey && !e.ctrlKey) {
+          chrome.windows.create({url: url}, cb);
+        }
+      });
+    });
+  };
+
+  document.documentElement.addEventListener('click', handler, false);
+
+  (function() {
+    var target = undefined;
+
+    document.documentElement.addEventListener('mousedown', function(e) {
+      if (e.which === 2) {
+        target = e.target;
+      }
+    }, false);
+
+    document.documentElement.addEventListener('mouseup', function(e) {
+      if (e.which === 2) {
+        if (e.target === target) {
+          var dummy = {
+            which: e.which,
+            shiftKey: e.shiftKey,
+            ctrlKey: e.ctrlKey,
+            target: e.target,
+            preventDefault: function() { null; }
+          };
+          document.documentElement.removeEventListener('click', handler, false);
+          handler(dummy);
+        }
+        target = null;
+      }
+    }, false);
+  })();
 }, false);
-		</script>
-	</head>
-	<body>
-		<div id="left"></div>
-		<div id="right">
-			<a href="chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html" title="Bookmarks">
-				<img src="chrome://favicon/chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html">
-			</a>
-			<a href="chrome://history/" title="History">
-				<img src="chrome://favicon/chrome://history/">
-			</a>
-			<a href="chrome://downloads/" title="Downloads">
-				<img src="chrome://favicon/chrome://downloads/">
-			</a>
-			<a href="chrome://extensions/" title="Extensions">
-				<img src="chrome://favicon/chrome://extensions/">
-			</a>
-		</div>
-	</body>
+    </script>
+  </head>
+  <body>
+    <div id="left"></div>
+    <div id="right">
+      <a href="chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html" title="Bookmarks">
+        <img src="chrome://favicon/chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html">
+      </a>
+      <a href="chrome://history/" title="History">
+        <img src="chrome://favicon/chrome://history/">
+      </a>
+      <a href="chrome://downloads/" title="Downloads">
+        <img src="chrome://favicon/chrome://downloads/">
+      </a>
+      <a href="chrome://extensions/" title="Extensions">
+        <img src="chrome://favicon/chrome://extensions/">
+      </a>
+    </div>
+  </body>
 </html>

@@ -1,19 +1,19 @@
 {
-	"name" : "FaviconBox",
-	"version" : "0.2",
-	"browser_action" : {
-		"default_icon" : "star19.png",
-		"default_popup" : "popup.html"
-	},
-	"icons" : {
-		"16" : "star16.png",
-		"48" : "star48.png",
-		"128" : "star128.png"
-	},
-	"minimum_chrome_version" : "6",
-	"permissions" : [
-		"bookmarks",
-		"tabs",
-		"chrome://favicon/"
-	]
+  "name" : "FaviconBox",
+  "version" : "0.2",
+  "browser_action" : {
+    "default_icon" : "star19.png",
+    "default_popup" : "popup.html"
+  },
+  "icons" : {
+    "16" : "star16.png",
+    "48" : "star48.png",
+    "128" : "star128.png"
+  },
+  "minimum_chrome_version" : "9",
+  "permissions" : [
+    "bookmarks",
+    "tabs",
+    "chrome://favicon/"
+  ]
 }
