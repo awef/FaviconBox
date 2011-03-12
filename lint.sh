@@ -1,1 +1,1 @@
-gjslint --strict --nojsdoc --check_html -r code/ | less -F
+gjslint --strict --nojsdoc --check_html -r . -x raphael-min.js | less
