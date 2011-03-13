@@ -13,8 +13,10 @@ html, body {
 body {
   width : 200px;
   padding: 3px;
-  display : -webkit-box;
   background: -webkit-linear-gradient(#fff, #eee);
+}
+#main {
+  display : -webkit-box;
 }
 #left {
   -webkit-box-flex: 1;
@@ -25,7 +27,7 @@ body {
   overflow: hidden;
   width: 32px;
 }
-a {
+#main a {
   display: block;
   float: left;
   padding: 4px;
@@ -34,10 +36,10 @@ a {
   box-shadow: 1px 1px 5px #666;
   background-image: -webkit-linear-gradient(#fff, #eee);
 }
-a:hover {
+#main a:hover {
   background-image: -webkit-linear-gradient(#eee, #ddd);
 }
-img {
+#main img {
   width: 16px;
   height: 16px;
   display: block;
@@ -101,18 +103,19 @@ window.addEventListener('load', function() {
     });
   };
 
-  document.documentElement.addEventListener('click', handler, false);
+  var main = document.getElementById('main');
+  main.addEventListener('click', handler, false);
 
   (function() {
     var target = undefined;
 
-    document.documentElement.addEventListener('mousedown', function(e) {
+    main.addEventListener('mousedown', function(e) {
       if (e.which === 2) {
         target = e.target;
       }
     }, false);
 
-    document.documentElement.addEventListener('mouseup', function(e) {
+    main.addEventListener('mouseup', function(e) {
       if (e.which === 2) {
         if (e.target === target) {
           var dummy = {
@@ -122,7 +125,7 @@ window.addEventListener('load', function() {
             target: e.target,
             preventDefault: function() { null; }
           };
-          document.documentElement.removeEventListener('click', handler, false);
+          main.removeEventListener('click', handler, false);
           handler(dummy);
         }
         target = null;
@@ -133,20 +136,22 @@ window.addEventListener('load', function() {
     </script>
   </head>
   <body>
-    <div id="left"></div>
-    <div id="right">
-      <a href="chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html" title="Bookmarks">
-        <img src="chrome://favicon/chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html">
-      </a>
-      <a href="chrome://history/" title="History">
-        <img src="chrome://favicon/chrome://history/">
-      </a>
-      <a href="chrome://downloads/" title="Downloads">
-        <img src="chrome://favicon/chrome://downloads/">
-      </a>
-      <a href="chrome://extensions/" title="Extensions">
-        <img src="chrome://favicon/chrome://extensions/">
-      </a>
+    <div id="main">
+      <div id="left"></div>
+      <div id="right">
+        <a href="chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html" title="Bookmarks">
+          <img src="chrome://favicon/chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html">
+        </a>
+        <a href="chrome://history/" title="History">
+          <img src="chrome://favicon/chrome://history/">
+        </a>
+        <a href="chrome://downloads/" title="Downloads">
+          <img src="chrome://favicon/chrome://downloads/">
+        </a>
+        <a href="chrome://extensions/" title="Extensions">
+          <img src="chrome://favicon/chrome://extensions/">
+        </a>
+      </div>
     </div>
   </body>
 </html>
