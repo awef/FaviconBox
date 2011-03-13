@@ -47,37 +47,45 @@ body {
     </style>
     <script>
 window.addEventListener('load', function() {
-  var left = document.getElementById('left');
+  var main, left, cb, handler;
 
-  chrome.bookmarks.getTree(function(tree) {
-    tree[0].children[0].children.forEach(function(val) {
-      if ('url' in val) {
-        var a = document.createElement('a');
-        a.href = val.url;
-        a.title = val.title;
+  main = document.getElementById('main');
+  left = document.getElementById('left');
 
-        var img = document.createElement('img');
-        img.src = 'chrome://favicon/' + val.url;
+  chrome.bookmarks.getTree(function(res) {
+    var key, node, a, img;
+
+    for (key = 0; node = res[0].children[0].children[key]; key++) {
+      if ('url' in node) {
+
+        a = document.createElement('a');
+        a.href = node.url;
+        a.title = node.title;
+
+        img = document.createElement('img');
+        img.src = 'chrome://favicon/' + node.url;
         a.appendChild(img);
 
         left.appendChild(a);
       }
-    });
+    }
   });
 
-  var handler = function(e) {
+  handler = function(e) {
+    var url, cb;
+
     if (e.target.webkitMatchesSelector('a')) {
-      var url = e.target.href;
+      url = e.target.href;
     }
     else if (e.target.webkitMatchesSelector('a > img')) {
-      var url = e.target.parentNode.href;
+      url = e.target.parentNode.href;
     }
     else {
       return;
     }
     e.preventDefault();
 
-    var cb = function() {
+    cb = function() {
       close();
     };
     chrome.windows.getCurrent(function(window) {
@@ -103,11 +111,10 @@ window.addEventListener('load', function() {
     });
   };
 
-  var main = document.getElementById('main');
   main.addEventListener('click', handler, false);
 
   (function() {
-    var target = undefined;
+    var target;
 
     main.addEventListener('mousedown', function(e) {
       if (e.which === 2) {
@@ -118,15 +125,14 @@ window.addEventListener('load', function() {
     main.addEventListener('mouseup', function(e) {
       if (e.which === 2) {
         if (e.target === target) {
-          var dummy = {
+          main.removeEventListener('click', handler, false);
+          handler({
             which: e.which,
             shiftKey: e.shiftKey,
             ctrlKey: e.ctrlKey,
             target: e.target,
             preventDefault: function() { null; }
-          };
-          main.removeEventListener('click', handler, false);
-          handler(dummy);
+          });
         }
         target = null;
       }
