@@ -74,15 +74,12 @@ window.addEventListener('load', function() {
   handler = function(e) {
     var url, cb;
 
-    if (e.target.webkitMatchesSelector('a')) {
-      url = e.target.href;
-    }
-    else if (e.target.webkitMatchesSelector('a > img')) {
-      url = e.target.parentNode.href;
-    }
-    else {
+    url = e.target.href || e.target.parentNode.href;
+
+    if (url === undefined) {
       return;
     }
+
     e.preventDefault();
 
     cb = function() {
