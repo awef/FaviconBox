@@ -13,6 +13,7 @@ body {
   width : 200px;
   background: -webkit-linear-gradient(#fff, #eee);
 }
+
 #main {
   display : -webkit-box;
 }
@@ -42,10 +43,29 @@ body {
   height: 16px;
   display: block;
 }
+
+footer {
+  margin-top: 5px;
+  text-align: right;
+  height: 15px;
+}
+footer a {
+  text-decoration: none;
+  font-size: 12px;
+  color: #78a;
+}
     </style>
     <script>
 window.addEventListener('load', function() {
-  var main, left, cb, handler;
+  var config, main, left, cb, handler;
+
+  config = {};
+  config.set = function(key, value) {
+    localStorage['config_' + key] = value;
+  };
+  config.get = function(key) {
+    return localStorage['config_' + key];
+  };
 
   main = document.getElementById('main');
   left = document.getElementById('left');
@@ -85,19 +105,20 @@ window.addEventListener('load', function() {
     };
     chrome.windows.getCurrent(function(window) {
       chrome.tabs.getSelected(window.id, function(tab) {
-        if (e.which === 1 && !e.shiftKey && !e.ctrlKey) {
-          chrome.tabs.update(tab.id, {url: url}, cb);
-        }
-        else if (
+        if (
+            (config.get('always_open_in_new_tab') === 'on') ||
             (e.which === 1 && e.ctrlKey) ||
             (e.which === 2)
         ) {
           chrome.tabs.create({
             url: url,
             index: tab.index + 1,
-            //selected : e.shiftKey
+            /* selected : e.shiftKey */
             selected: true
           }, cb);
+        }
+        else if (e.which === 1 && !e.shiftKey && !e.ctrlKey) {
+          chrome.tabs.update(tab.id, {url: url}, cb);
         }
         else if (e.which === 1 && e.shiftKey && !e.ctrlKey) {
           chrome.windows.create({url: url}, cb);
@@ -157,5 +178,8 @@ window.addEventListener('load', function() {
         </a>
       </div>
     </div>
+    <footer>
+      <a href="option.html" target="_blank">option</a>
+    </footer>
   </body>
 </html>

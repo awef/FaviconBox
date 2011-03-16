@@ -16,5 +16,6 @@
     "bookmarks",
     "tabs",
     "chrome://favicon/"
-  ]
+  ],
+  "options_page" : "option.html"
 }
