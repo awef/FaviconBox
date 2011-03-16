@@ -1,6 +1,6 @@
 {
   "name" : "FaviconBox",
-  "version" : "0.2",
+  "version" : "0.3",
   "description" : "ブックマークバーの中身を表示します",
   "browser_action" : {
     "default_icon" : "star19.png",
