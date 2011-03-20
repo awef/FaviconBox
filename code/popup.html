@@ -4,6 +4,16 @@
     <meta charset="utf-8">
     <title></title>
     <style>
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
 html {
   -webkit-user-select: none;
   overflow: hidden;
@@ -17,11 +27,13 @@ body {
 
 #main {
   display : -webkit-box;
+  max-height: 400px;
 }
 #left {
   -webkit-box-flex: 1;
-  overflow: hidden;
   margin-right: 3px;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 #right {
   overflow: hidden;
