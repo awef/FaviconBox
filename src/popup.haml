@@ -1,0 +1,174 @@
+!!! 5
+%html
+  %head
+    %meta(charset="utf-8")
+    %meta(http-equiv="X-Frame-Options" content="SAMEORIGIN")
+    %title FaviconBox
+    %style
+      :sass
+        ::-webkit-scrollbar
+          :width 3px
+        ::-webkit-scrollbar-thumb
+          :background-color rgba(0, 0, 0, 0.2)
+          &:hover
+            :background-color rgba(0, 0, 0, 0.4)
+
+        html
+          :-webkit-user-select none
+          :overflow hidden
+        body
+          :margin 0
+          :padding 3px
+          :width 200px
+          :background -webkit-linear-gradient(#fff, #eee)
+
+        #left
+          :-webkit-box-flex 1
+          :margin-right 3px
+          :overflow-x hidden
+          :overflow-y scroll
+        #right
+          :overflow hidden
+          :width 32px
+        #main
+          :display -webkit-box
+          :max-height 400px
+          a
+            :display block
+            :float left
+            :padding 4px
+            :margin 4px
+            :border-radius 3px
+            :box-shadow 1px 1px 5px #666
+            :background-image -webkit-linear-gradient(#fff, #eee)
+            &:hover
+              :background-image -webkit-linear-gradient(#eee, #ddd)
+          img
+            :width 16px
+            :height 16px
+            :display block
+
+        footer
+          :margin-top 5px
+          :text-align right
+          :height 15px
+          a
+            :text-decoration none
+            :font-size 12px
+            :color #78a
+    :javascript
+      window.addEventListener('load', function() {
+        var config, main, left, cb, handler;
+
+        config = {};
+        config.set = function(key, value) {
+          localStorage['config_' + key] = value;
+        };
+        config.get = function(key) {
+          return localStorage['config_' + key];
+        };
+
+        main = document.getElementById('main');
+        left = document.getElementById('left');
+
+        chrome.bookmarks.getTree(function(res) {
+          var key, node, a, img;
+
+          for (key = 0; node = res[0].children[0].children[key]; key++) {
+            if ('url' in node) {
+
+              a = document.createElement('a');
+              a.href = node.url;
+              a.title = node.title;
+
+              img = document.createElement('img');
+              img.src = 'chrome://favicon/' + node.url;
+              a.appendChild(img);
+
+              left.appendChild(a);
+            }
+          }
+        });
+
+        handler = function(e) {
+          var url, cb;
+
+          url = e.target.href || e.target.parentNode.href;
+
+          if (url === undefined) {
+            return;
+          }
+
+          e.preventDefault();
+
+          cb = function() {
+            close();
+          };
+          chrome.windows.getCurrent(function(window) {
+            chrome.tabs.getSelected(window.id, function(tab) {
+              if (
+                  (config.get('always_open_in_new_tab') === 'on') ||
+                  (e.which === 1 && e.ctrlKey) ||
+                  (e.which === 2)
+              ) {
+                chrome.tabs.create({
+                  url: url,
+                  index: tab.index + 1,
+                  /* selected : e.shiftKey */
+                  selected: true
+                }, cb);
+              }
+              else if (e.which === 1 && !e.shiftKey && !e.ctrlKey) {
+                chrome.tabs.update(tab.id, {url: url}, cb);
+              }
+              else if (e.which === 1 && e.shiftKey && !e.ctrlKey) {
+                chrome.windows.create({url: url}, cb);
+              }
+            });
+          });
+        };
+
+        main.addEventListener('click', handler, false);
+
+        (function() {
+          var target;
+
+          main.addEventListener('mousedown', function(e) {
+            if (e.which === 2) {
+              target = e.target;
+            }
+          }, false);
+
+          main.addEventListener('mouseup', function(e) {
+            if (e.which === 2) {
+              if (e.target === target) {
+                main.removeEventListener('click', handler, false);
+                handler({
+                  which: e.which,
+                  shiftKey: e.shiftKey,
+                  ctrlKey: e.ctrlKey,
+                  target: e.target,
+                  preventDefault: function() { null; }
+                });
+              }
+              target = null;
+            }
+          }, false);
+        })();
+      }, false);
+  %body
+    #main
+      #left
+      #right
+        %a(href="chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html" title="Bookmarks")
+          %img(src="chrome://favicon/chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html")
+        %a(href="chrome://history/" title="History")
+          %img(src="chrome://favicon/chrome://history/")
+        %a(href="chrome://downloads/" title="Downloads")
+          %img(src="chrome://favicon/chrome://downloads/")
+        %a(href="chrome://extensions/" title="Extensions")
+          %img(src="chrome://favicon/chrome://extensions/")
+        %a(href="chrome://settings/" title="Settings")
+          %img(src="chrome://favicon/chrome://settings/")
+    %footer
+      %a(href="option.html" target="_blank") option

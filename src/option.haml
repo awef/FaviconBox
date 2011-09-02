@@ -1,0 +1,43 @@
+!!! 5
+%html
+  %head
+    %meta(charset="utf-8")
+    %meta(http-equiv="X-Frame-Options" content="SAMEORIGIN")
+    %title FaviconBox
+    %style
+      :sass
+        html
+          :color #222
+        h1
+          :font-size large
+          :padding-bottom 5px
+          :border-bottom 1px solid #555
+        label
+          :cursor pointer
+    :javascript
+      window.addEventListener('load', function() {
+        var config, node, nodes;
+
+        config = {};
+        config.set = function(key, value) {
+          localStorage['config_' + key] = value;
+        };
+        config.get = function(key) {
+          return localStorage['config_' + key];
+        };
+
+        nodes = document.querySelectorAll('input[type="checkbox"]');
+        for (key = 0; node = nodes[key]; key++) {
+          node.checked = (config.get(node.name) === 'on');
+        }
+
+        document.documentElement.addEventListener('change', function(e) {
+          if (e.target.webkitMatchesSelector('input[type="checkbox"]')) {
+            config.set(e.target.name, e.target.checked ? 'on' : 'off');
+          }
+        }, false);
+      }, false);
+  %body
+    %h1 FaviconBox
+    %label
+      %input(name="always_open_in_new_tab" type="checkbox") Always open in new tab.
