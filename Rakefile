@@ -2,11 +2,11 @@ SRC = "src"
 BUILD = "build"
 
 p_cp = proc do |t|
-  sh "cp #{t.prerequisites} #{t.name}"
+  sh "cp #{t.prerequisites[0]} #{t.name}"
 end
 
 rule ".html" => "%{^#{BUILD}/,#{SRC}/}X.haml" do |t|
-  sh "haml -q #{t.prerequisites} #{t.name}"
+  sh "haml -q #{t.prerequisites[0]} #{t.name}"
 end
 
 rule ".png" => "#{SRC}/%{_\\d+x\\d+$,}n.svg" do |t|
@@ -14,7 +14,7 @@ rule ".png" => "#{SRC}/%{_\\d+x\\d+$,}n.svg" do |t|
   sh "convert\
     -background transparent\
     -resize #{$1}x#{$2}\
-    #{t.prerequisites} #{t.name}"
+    #{t.prerequisites[0]} #{t.name}"
 end
 
 task :default => [
