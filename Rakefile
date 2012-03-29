@@ -21,7 +21,9 @@ task :default => [
   BUILD,
   "#{BUILD}/manifest.json",
   "#{BUILD}/popup.html",
+  "#{BUILD}/popup.js",
   "#{BUILD}/option.html",
+  "#{BUILD}/option.js",
   "#{BUILD}/icon_16x16.png",
   "#{BUILD}/icon_19x19.png",
   "#{BUILD}/icon_48x48.png",
@@ -34,3 +36,5 @@ end
 
 directory BUILD
 file "#{BUILD}/manifest.json" => "#{SRC}/manifest.json", &p_cp
+file "#{BUILD}/popup.js" => "#{SRC}/popup.js", &p_cp
+file "#{BUILD}/option.js" => "#{SRC}/option.js", &p_cp
