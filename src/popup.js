@@ -69,7 +69,14 @@ window.addEventListener('load', function() {
     });
   };
 
-  main.addEventListener('click', handler, false);
+  main.addEventListener('click', function (e) {
+    if (e.which === 2) {
+      e.preventDefault();
+    }
+    else {
+      handler(e);
+    }
+  }, false);
 
   (function() {
     var target;
