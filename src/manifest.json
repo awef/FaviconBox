@@ -1,6 +1,6 @@
 {
   "name" : "FaviconBox",
-  "version" : "0.7",
+  "version" : "0.8",
   "manifest_version": 2,
   "description" : "ブックマークバーの中身を表示します",
   "browser_action" : {
